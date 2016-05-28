@@ -1,14 +1,21 @@
 
 InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=10, MinSteps=15, MaxSteps=20, dimx=10, dimy=10)
 {
-  
-  
   Main(Betamap, Particles, ParticlesNumber, MinSteps, MaxSteps , dimx,dimy)
 }
 
-
-
-
+FindMin<-function(lst)
+{
+  minError = 100000
+  index = 0
+  for( i in 1:length(lst))
+    if( lst[[i]]$error < minError)
+    {
+      index = i
+      minError = lst[[i]]$error
+    }
+  index
+}
 
 Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20, dimx = 10, dimy = 10)
 {
@@ -22,38 +29,101 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
     message("Dimensions of boards don't match")
     return()
   }
-  
-
-  
   NextStep = Particles
-  PreviousStep = Particles
+  
+  minError = 1000
+  iteration = 0
+  
+  while( minError > 5 && iteration < 500)
+  {
   
   
-  
-  
-  # Loop for calculating Particles
+  # Loop for calculating Minimums for Particles
   for( i in 1: MaxSteps)
   {
     PreviousStep = NextStep
     # For each particle
     NextStep = CalculateNextStep(PreviousStep,ParticlesNumber)
     if( i == MinSteps){
-      MinimumParticles = CreateMinimumList(NextStep,ParticlesNumber,BetaMap)
+      MinimumParticles = CreateMinimumList(NextStep,ParticlesNumber,BetaMap,Particles)
     }
     if( i > MinSteps ){
       MinimumParticles = CheckForMinimum(NextStep, MinimumParticles,ParticlesNumber, BetaMap) }
   }
+  
+  
+    
+  # Loop for Evolution Algorithm
+  
+    
+    MinimumParticle = EvolutionAlgorithm(MinimumParticles)
+    
+    NextStep = GetBoard(MinimumParticle)
+    
+    
+    minError = MinimumParticle[[FindMin(MinimumParticle)]]$error
+    if( minError < 40){
+    print(minError)}
+  
+  
+  
+  
+  iteration = iteration + 1
+  }  
 
   MinimumParticles
 }
+
+EvolutionAlgorithm<-function(Mins, n = 5, k = 5, t = 4)
+{
+  
+  for( i in 1:length(Mins))
+    {
+      coef = floor(Mins[[i]]$error / t)
+    
+      Mins[[i]]$board = GenerateRandomChanges(Mins[[i]]$board, coef)
+    }
+  
+  Mins
+}
+
+GetBoard<-function(lst)
+{
+  Board <- list()
+  for( i in 1:length(lst))
+  {
+    Board[[i]] <- lst[[i]]$board
+  }
+  Board
+  
+}
+
+GenerateRandomChanges<-function(Board,ChangeNum)
+{
+  for( i in 1:ChangeNum)
+  {
+    r1 = sample(1:dim(Board)[1],1)
+    r2 = sample(1:dim(Board)[2],1)
+    
+    Board[r1,r2] = !Board[r1,r2]
+  }
+  
+  Board
+}
+
+
+
+
+
+
 # board in MinimumList is the best board for the current particle
-CreateMinimumList<-function(BoardsList, ParticlesNumber, final)
+CreateMinimumList<-function(CurrentBoards, ParticlesNumber, final, InitalBoards)
 {
   mybiglist <- list()
   for(i in 1:ParticlesNumber){
     
-    a <- BoardsList[[i]]
-    b <- CalculateDifference(final,BoardsList[[i]]) 
+    a <- InitalBoards[[i]]
+    b <- CalculateDifference(final,CurrentBoards[[i]]) 
     
     tmp <- list(board = a, error = b)
     mybiglist[[i]] <- tmp
@@ -70,7 +140,7 @@ CheckForMinimum<-function(NextStep, MinimumParticles,ParticlesNumber, BetaMap)
     if( error < MinimumParticles[[i]]$error)
     {
       MinimumParticles[[i]]$error = error
-      MinimumParticles[[i]]$board = NextStep[[i]]
+     # MinimumParticles[[i]]$board = NextStep[[i]]
     }
   }
   MinimumParticles
