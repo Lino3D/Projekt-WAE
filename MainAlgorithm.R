@@ -76,6 +76,16 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
 
 EvolutionAlgorithm<-function(Mins, n = 5, k = 5, t = 4)
 {
+  Mins = BubbleSortList(Mins)
+  
+  length = length(Mins)
+  
+  for( i in floor(length/2):length)
+  {
+#    Mins[[i]] = Mins[i-floor(length/2)]
+    
+  }
+  
   
   for( i in 1:length(Mins))
     {
@@ -97,9 +107,34 @@ GetBoard<-function(lst)
   Board
   
 }
+BubbleSortList = function(array)
+{
+  count = 1
+  while(1) {
+    count_swaps = 0
+    for (j in 1 : (length(array)  - count)) 
+      {
+      if (array[[j]]$error > array[[j + 1]]$error) 
+        {
+          s = array[[j]]
+          array[[j]] = array[[j+1]]
+          array[[j+1]] = s
+          count_swaps = count_swaps + 1
+        }
+    }
+    count = count + 1
+    if(count_swaps == 0) break
+  }
+
+  return(array)
+}
+
+
 
 GenerateRandomChanges<-function(Board,ChangeNum)
 {
+  if(ChangeNum==0)
+    return(Board)
   for( i in 1:ChangeNum)
   {
     r1 = sample(1:dim(Board)[1],1)
@@ -108,7 +143,7 @@ GenerateRandomChanges<-function(Board,ChangeNum)
     Board[r1,r2] = !Board[r1,r2]
   }
   
-  Board
+  
 }
 
 
