@@ -1,4 +1,4 @@
-InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=50, MinSteps=15, MaxSteps=50, dimx=10, dimy=10)
+InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=100, MinSteps=1, MaxSteps=50, dimx=10, dimy=10)
 {
   Main(Betamap, Particles, ParticlesNumber, MinSteps, MaxSteps , dimx,dimy)
 }
@@ -55,7 +55,7 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
    # Loop for Evolution Algorithm
   
     
-    MinimumParticles = EvolutionAlgorithm(MinimumParticles,BetaMap)
+    MinimumParticles = EvolutionAlgorithm(MinimumParticles,BetaMap, MaxSteps, MinSteps)
     
     Particles = GetBoard(MinimumParticles)
     
@@ -77,7 +77,7 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
   MinimumParticles
 }
 
-EvolutionAlgorithm<-function(Mins,BetaMap, n = 5, k = 5, t = 3)
+EvolutionAlgorithm<-function(Mins,BetaMap, MaxSteps,MinSteps, n = 5, k = 5, t = 10)
 {
   Mins = BubbleSortList(Mins)
   
@@ -94,13 +94,35 @@ EvolutionAlgorithm<-function(Mins,BetaMap, n = 5, k = 5, t = 3)
       coef = floor(Mins[[i]]$error / t)
     
      # Mins[[i]]$board = GenerateRandomChanges(Mins[[i]]$board, coef)
-      tmpBoard = GenerateRandomChanges(Mins[[i]]$board, coef)
+      tmpBoard = GenerateRandomChanges(Mins[[i]]$board, t)
       
-      tmpErr = CalculateDifference(BetaMap,tmpBoard)
-      if( tmpErr < Mins[[i]]$error)
+      
+      
+      Previous = Mins[[i]]$board
+      for( j in 1: MaxSteps)
       {
-        Mins[[i]]$board = tmpBoard
-        Mins[[i]]$error = tmpErr
+        NextStep = evolve(Previous)
+        if( j == MinSteps){
+          minErr = CalculateDifference(BetaMap,NextStep)
+          minBoard = NextStep
+        }
+        if( j > MinSteps ){
+          tmpErr = CalculateDifference(BetaMap,NextStep)
+          if( tmpErr < minErr)
+          {
+            minErr = tmpErr
+            minBoard = NextStep
+          }
+        }
+        Previous = NextStep
+      }
+      
+      
+      rand = sample(1:10,1)
+      if( minErr < Mins[[i]]$error || rand == 1)
+      {
+        Mins[[i]]$board = minBoard
+        Mins[[i]]$error = minErr
       }
     }
   
