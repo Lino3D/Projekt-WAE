@@ -1,7 +1,7 @@
 
-InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), ParticlesNumber=10, MinSteps=15, MaxSteps=20, dimx=10, dimy=10)
+InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=10, MinSteps=15, MaxSteps=20, dimx=10, dimy=10)
 {
-  Particles = Generate.Particles(ParticlesNumber,dimx,dimy)
+  
   
   Main(Betamap, Particles, ParticlesNumber, MinSteps, MaxSteps , dimx,dimy)
 }
