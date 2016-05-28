@@ -1,4 +1,4 @@
-Main<-function(BetaMap, MinSteps = 15, MaxSteps = 20, ParticlesNumber = 5, dimx = 50, dimy = 50)
+Main<-function(BetaMap, MinSteps = 15, MaxSteps = 20, ParticlesNumber = 5, dimx = 10, dimy = 10)
 {
   if( MinSteps > MaxSteps)
   { 
@@ -26,7 +26,7 @@ Main<-function(BetaMap, MinSteps = 15, MaxSteps = 20, ParticlesNumber = 5, dimx 
     # For each particle
     NextStep = CalculateNextStep(PreviousStep,ParticlesNumber)
     if( i == MinSteps){
-      MinimumParticles = CreateMinimumList
+      MinimumParticles = CreateMinimumList(NextStep,ParticlesNumber,BetaMap)
     }
     if( i > MinSteps ){
       MinimumParticles = CheckForMinimum(NextStep, MinimumParticles,ParticlesNumber, BetaMap) }
@@ -61,6 +61,7 @@ CheckForMinimum<-function(NextStep, MinimumParticles,ParticlesNumber, BetaMap)
       MinimumParticles[[i]]$board = NextStep[[i]]
     }
   }
+  MinimumParticles
 }
 
 CalculateNextStep<-function(Particles,ParticlesNumber)
