@@ -1,35 +1,65 @@
-Main<-function(MinSteps = 100, MaxSteps = 120, ParticlesNumber = 30, dimx = 50, dimy = 50)
+Main<-function(BetaMap, MinSteps = 15, MaxSteps = 20, ParticlesNumber = 5, dimx = 50, dimy = 50)
 {
   if( MinSteps > MaxSteps)
-  { return() }
+  { 
+    message("MinSteps is greater than MaxSteps")
+    return() 
+  }
+  if( dim(BetaMap)[1]!= dimx || dim(BetaMap)[2] != dimy)
+  {
+    message("Dimensions of boards don't match")
+    return()
+  }
   
   Particles = Generate.Particles(ParticlesNumber,dimx,dimy)
   
   NextStep = Particles
   PreviousStep = Particles
-  MinimumParticles
   
   
   
-  # Main Program Loop
+  
+  # Loop for calculating Particles
   for( i in 1: MaxSteps)
   {
     PreviousStep = NextStep
     # For each particle
     NextStep = CalculateNextStep(PreviousStep,ParticlesNumber)
+    if( i == MinSteps){
+      MinimumParticles = CreateMinimumList
+    }
     if( i > MinSteps ){
-      MinimumParticles = CheckForMinimum(NextStep, PreviousStep) }
-    
+      MinimumParticles = CheckForMinimum(NextStep, MinimumParticles,ParticlesNumber, BetaMap) }
   }
-  
-  
+
+  MinimumParticles
 }
-CheckForMinimum<-function(NextStep, PreviousStep)
+# board in MinimumList is the best board for the current particle
+CreateMinimumList<-function(BoardsList, ParticlesNumber, final)
+{
+  mybiglist <- list()
+  for(i in 1:ParticlesNumber){
+    
+    a <- BoardsList[[i]]
+    b <- CalculateDifference(final,BoardsList[[i]]) 
+    
+    tmp <- list(board = a, error = b)
+    mybiglist[[i]] <- tmp
+  }
+  mybiglist
+}
+
+CheckForMinimum<-function(NextStep, MinimumParticles,ParticlesNumber, BetaMap)
 {
   for( i in 1: ParticlesNumber)
   {
-    board = evolve(Particles[[i]])
-    NextStepParticles[[i]] <- board
+    error = CalculateDifference(NextStep[[i]],BetaMap)
+    
+    if( error < MinimumParticles[[i]]$error)
+    {
+      MinimumParticles[[i]]$error = error
+      MinimumParticles[[i]]$board = NextStep[[i]]
+    }
   }
 }
 
