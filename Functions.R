@@ -70,6 +70,18 @@ evolve <- function(board)
  return(newboard)
 }
 
+checkdimentions = function(x, y)
+{
+  if(dim(x)[1] != dim(y)[1] || dim(x)[2] != dim(y)[2])
+  {
+    return(FALSE)
+  }
+  else
+    return(TRUE)
+  
+}
+
+
 # Plays the game.  By default, the board is shown in a plot window, though output to the console if possible.
 game.of.life <- function(board, finalboard, minsteps =20,maxsteps=50, timebetweensteps=0.25, graphicaloutput=TRUE)
 {
@@ -78,7 +90,7 @@ game.of.life <- function(board, finalboard, minsteps =20,maxsteps=50, timebetwee
   
   counter =0
   
-  if(dim(board)[1] != dim(finalboard)[1] || dim(board)[2] != dim(finalboard)[2])
+  if(checkdimentions(board, finalboard)==FALSE)
   {
     message("Dimensions of boards don't match")
     invisible(board)
