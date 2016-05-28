@@ -42,6 +42,7 @@ gen.board <- function(type="random", nrow=3, ncol=3, seeds=NULL)
   return(board)
 }
 
+
 # Returns the number of living neighbours to a location
 count.neighbours <- function(x,i,j) 
 {   
@@ -77,7 +78,14 @@ game.of.life <- function(board, finalboard, minsteps =20,maxsteps=50, timebetwee
   
   counter =0
   
-  for(i in seq_len(maxsteps))
+  if(dim(board)[1] != dim(finalboard)[1] || dim(board)[2] != dim(finalboard)[2])
+  {
+    message("Dimensions of boards don't match")
+    invisible(board)
+  }
+  
+  
+  for(i in seq_len(maxsteps) && counter < maxsteps)
   {
     if(graphicaloutput) 
     {
@@ -105,7 +113,15 @@ game.of.life <- function(board, finalboard, minsteps =20,maxsteps=50, timebetwee
       message("everything is dead")
       break
     } 
-    else board <- newboard
+    else if(counter == maxsteps)
+    {
+      message("Max steps reached")
+      break;
+    }
+    else  
+      board <- newboard
+   
+    
   }   
   return(board)
 }
