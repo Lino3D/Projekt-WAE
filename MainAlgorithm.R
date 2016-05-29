@@ -29,14 +29,14 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
     message("Dimensions of boards don't match")
     return()
   }
-  NextStep = Particles
+ 
   
   minError = 1000
   iteration = 0
   
   while( minError > 5 && iteration < 500)
   {
-  
+    NextStep = Particles
   
   # Loop for calculating Minimums for Particles
   for( i in 1: MaxSteps)
@@ -58,13 +58,12 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
     
     MinimumParticles = EvolutionAlgorithm(MinimumParticles)
     
-    NextStep = GetBoard(MinimumParticles)
+    Particles = GetBoard(MinimumParticles)
     
     
     minError = MinimumParticles[[FindMin(MinimumParticles)]]$error
     if( minError < 40){
     print(minError)}
-  
   
   
   
@@ -82,7 +81,7 @@ EvolutionAlgorithm<-function(Mins, n = 5, k = 5, t = 4)
   
   for( i in floor(length/2):length)
   {
-   # Mins[[i]] = Mins[[i+1-(floor(length/2))]]
+    #Mins[[i]] = Mins[[i-floor(length/2)]]
     
   }
   
@@ -112,7 +111,7 @@ BubbleSortList = function(array)
   count = 0
   while(1) {
     count_swaps = 0
-    for (j in 1 : (length(array) -1 - count)) 
+    for (j in 1 : (length(array) - 1 - count)) 
       {
       if (array[[j]]$error > array[[j + 1]]$error) 
         {
@@ -142,7 +141,8 @@ GenerateRandomChanges<-function(Board,ChangeNum)
     
     Board[r1,r2] = !Board[r1,r2]
   }
-  return(Board)
+  
+  Board
   
 }
 

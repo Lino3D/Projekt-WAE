@@ -83,21 +83,17 @@ checkdimentions = function(x, y)
 
 
 # Plays the game.  By default, the board is shown in a plot window, though output to the console if possible.
-game.of.life <- function(board, finalboard, minsteps =20,maxsteps=50, timebetweensteps=0.25, graphicaloutput=TRUE)
+game.of.life <- function(board, minsteps =20,maxsteps=50, timebetweensteps=0.25, graphicaloutput=TRUE)
 {
   library("lattice")
   nr <- nrow(board)
   
   counter =0
   
-  if(checkdimentions(board, finalboard)==FALSE)
-  {
-    message("Dimensions of boards don't match")
-    invisible(board)
-  }
+
   
   
-  for(i in seq_len(maxsteps) && counter < maxsteps)
+  for(i in seq_len(maxsteps))
   {
     if(graphicaloutput) 
     {
@@ -109,11 +105,7 @@ game.of.life <- function(board, finalboard, minsteps =20,maxsteps=50, timebetwee
     newboard <- evolve(board)
     counter = counter + 1
     
-    if(identical(board, finalboard))
-    {
-      message("Beta board reached")
-      break;
-    }
+   
     
     if(all(newboard==board))
     {
