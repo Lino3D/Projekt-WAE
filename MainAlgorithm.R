@@ -169,12 +169,36 @@ GenerateRandomChanges<-function(inputBoard,ChangeNum)
   if(ChangeNum==0)
     return(Board)
   Board = inputBoard
-  for( i in 1:ChangeNum)
+  
+  
+  z = floor(ChangeNum/2)
+ 
+  for(i in 1:dim(inputBoard)[1])  # for each row
   {
-    r1 = sample(1:dim(Board)[1],1)
-    r2 = sample(1:dim(Board)[2],1)
     
-    Board[r1,r2] = !Board[r1,r2]
+    for(j in 1:dim(inputBoard)[2]) # for each column
+    {
+      if( inputBoard[i,j]==TRUE && dim(inputBoard)[1] > i+1 && dim(inputBoard)[2] > j+1 && ChangeNum >0 && i-1 >1 && j-1 >1)
+      {
+        
+        x = sample(-1:1,1)
+        y = sample(-1:1,1)
+        
+        ChangeNum = ChangeNum -1
+        Board[i,j] =FALSE
+        Board[i+x,y+j] = !Board[i+x,y+j]
+      }
+      
+    }
+  }
+
+  
+  for( i in 1:z)
+  {
+   r1 = sample(1:dim(Board)[1],1)
+   r2 = sample(1:dim(Board)[2],1)
+    
+   Board[r1,r2] = !Board[r1,r2]
   }
   
   Board

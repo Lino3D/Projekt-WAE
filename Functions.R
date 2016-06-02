@@ -1,4 +1,4 @@
-
+b
 fillMatrix<-function(x)
 {
   for(i in 1:dim(x)[1])  # for each row
