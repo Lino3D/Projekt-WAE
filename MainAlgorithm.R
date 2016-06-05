@@ -54,8 +54,6 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
   
     
    # Loop for Evolution Algorithm
-  
-    
     MinimumParticles = EvolutionAlgorithm(MinimumParticles,BetaMap, MaxSteps, MinSteps)
     
     Particles = GetBoard(MinimumParticles)
@@ -78,7 +76,7 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
   MinimumParticles
 }
 
-EvolutionAlgorithm<-function(Mins,BetaMap, MaxSteps,MinSteps, n = 5, k = 5, t = 10)
+EvolutionAlgorithm<-function(Mins,BetaMap, MaxSteps,MinSteps, n = 5, k = 5, t = 40)
 {
   Mins = BubbleSortList(Mins)
   
@@ -97,34 +95,9 @@ EvolutionAlgorithm<-function(Mins,BetaMap, MaxSteps,MinSteps, n = 5, k = 5, t = 
      # Mins[[i]]$board = GenerateRandomChanges(Mins[[i]]$board, coef)
       tmpBoard = GenerateRandomChanges(Mins[[i]]$board, t)
       
+      Mins[[i]]$board = tmpBoard
       
-      
-      Previous = Mins[[i]]$board
-      for( j in 1: MaxSteps)
-      {
-        NextStep = evolve(Previous)
-        if( j == MinSteps){
-          minErr = CalculateDifference(BetaMap,NextStep)
-          minBoard = NextStep
-        }
-        if( j > MinSteps ){
-          tmpErr = CalculateDifference(BetaMap,NextStep)
-          if( tmpErr < minErr)
-          {
-            minErr = tmpErr
-            minBoard = NextStep
-          }
-        }
-        Previous = NextStep
-      }
-      
-      
-      rand = sample(1:10,1)
-      if( minErr < Mins[[i]]$error || rand == 1)
-      {
-        Mins[[i]]$board = minBoard
-        Mins[[i]]$error = minErr
-      }
+     
     }
   
   Mins
@@ -219,13 +192,13 @@ GenerateRandomChanges<-function(inputBoard,ChangeNum)
     }
   }
 
-  
-  for( i in 1:z)
+    for( i in 1:z)
   {
-  # r1 = sample(1:dim(Board)[1],1)
-  # r2 = sample(1:dim(Board)[2],1)
+   r1 = sample(1:dim(Board)[1],1)
+   r2 = sample(1:dim(Board)[2],1)
     
-  # Board[r1,r2] = !Board[r1,r2]
+   Board[r1,r2] = !Board[r1,r2]
+  #  Board = gen.board("random",3,3)
   }
   
   Board
@@ -251,7 +224,7 @@ CheckForMinimum<-function(NextStep, MinimumParticles,ParticlesNumber, BetaMap)
   {
     error = CalculateDifference(NextStep[[i]],BetaMap)
     
-    #if( error < MinimumParticles[[i]]$error)
+    if( error < MinimumParticles[[i]]$error)
     {
       MinimumParticles[[i]]$error = error
       MinimumParticles[[i]]$result = NextStep[[i]]
