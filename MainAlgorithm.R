@@ -117,8 +117,7 @@ EvolutionAlgorithm<-function(Mins,BetaMap, MaxSteps,MinSteps, n = 5, k = 5, t = 
         }
         Previous = NextStep
       }
-      
-      
+   
       rand = sample(1:10,1)
       if( minErr < Mins[[i]]$error || rand == 1)
       {
@@ -210,7 +209,7 @@ GenerateRandomChanges<-function(inputBoard,ChangeNum)
         }
         } 
         ChangeNum = ChangeNum -1
-        Board[i,j] =FALSE
+     #   Board[i,j] =FALSE
         Board[i+x,y+j] = !Board[i+x,y+j]
       }
       
