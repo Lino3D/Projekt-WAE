@@ -1,7 +1,7 @@
-InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=100, MinSteps=1, MaxSteps=50, dimx=10, dimy=10)
+InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=100, MinSteps=1, MaxSteps=50, dimx=10, dimy=10, RandomCoefficient = 40, Iterations = 500)
 {
   library("lattice")
-  Main(Betamap, Particles, ParticlesNumber, MinSteps, MaxSteps , dimx,dimy)
+  Main(Betamap, Particles, ParticlesNumber, MinSteps, MaxSteps , dimx,dimy, RandomCoefficient, Iterations)
 }
 
 FindMin<-function(lst)
@@ -17,7 +17,7 @@ FindMin<-function(lst)
   index
 }
 
-Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20, dimx = 10, dimy = 10)
+Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20, dimx = 10, dimy = 10, RandomCoefficient, Iterations)
 {
   if( MinSteps > MaxSteps)
   { 
@@ -34,7 +34,7 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
   minError = 1000
   iteration = 0
   
-  while( minError > 0 && iteration < 500)
+  while( minError > 0 && iteration < Iterations)
   {
     NextStep = Particles
   
@@ -54,7 +54,7 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
   
     
    # Loop for Evolution Algorithm
-    MinimumParticles = EvolutionAlgorithm(MinimumParticles,BetaMap, MaxSteps, MinSteps)
+    MinimumParticles = EvolutionAlgorithm(MinimumParticles,BetaMap, MaxSteps, MinSteps, RandomCoefficient)
     
     Particles = GetBoard(MinimumParticles)
     
@@ -76,7 +76,7 @@ Main<-function(BetaMap, Particles, ParticlesNumber, MinSteps = 15, MaxSteps = 20
   MinimumParticles
 }
 
-EvolutionAlgorithm<-function(Mins,BetaMap, MaxSteps,MinSteps, n = 5, k = 5, t = 40)
+EvolutionAlgorithm<-function(Mins,BetaMap, MaxSteps,MinSteps, t = 40, n = 5, k = 5)
 {
   Mins = BubbleSortList(Mins)
   
