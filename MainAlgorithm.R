@@ -1,5 +1,6 @@
 InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=100, MinSteps=1, MaxSteps=50, dimx=10, dimy=10)
 {
+  library("lattice")
   Main(Betamap, Particles, ParticlesNumber, MinSteps, MaxSteps , dimx,dimy)
 }
 
@@ -224,7 +225,7 @@ CheckForMinimum<-function(NextStep, MinimumParticles,ParticlesNumber, BetaMap)
   {
     error = CalculateDifference(NextStep[[i]],BetaMap)
     
-    if( error < MinimumParticles[[i]]$error)
+    #if( error < MinimumParticles[[i]]$error)
     {
       MinimumParticles[[i]]$error = error
       MinimumParticles[[i]]$result = NextStep[[i]]
