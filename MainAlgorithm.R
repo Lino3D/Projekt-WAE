@@ -1,4 +1,4 @@
-InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=100, MinSteps=1, MaxSteps=50, dimx=10, dimy=10)
+InitializeTest<-function(Betamap = gen.board("random", dimx, dimy), Particles = Generate.Particles(ParticlesNumber,dimx,dimy), ParticlesNumber=100, MinSteps=1, MaxSteps=50, dimx=20, dimy=20)
 {
   library("lattice")
   Main(Betamap, Particles, ParticlesNumber, MinSteps, MaxSteps , dimx,dimy)
@@ -176,7 +176,6 @@ GenerateRandomChanges<-function(inputBoard,ChangeNum)
  
   for(i in 1:dim(inputBoard)[1])  # for each row
   {
-    
     for(j in 1:dim(inputBoard)[2]) # for each column
     {
       if( inputBoard[i,j]==TRUE && ChangeNum >0 )
@@ -210,7 +209,6 @@ GenerateRandomChanges<-function(inputBoard,ChangeNum)
           y = sample(-1:1,1)
         }
         } 
-        
         ChangeNum = ChangeNum -1
         Board[i,j] =FALSE
         Board[i+x,y+j] = !Board[i+x,y+j]
@@ -218,16 +216,16 @@ GenerateRandomChanges<-function(inputBoard,ChangeNum)
       
     }
   }
-
   
+if(z>=ChangeNum)
+{
   for( i in 1:z)
   {
-  # r1 = sample(1:dim(Board)[1],1)
-  # r2 = sample(1:dim(Board)[2],1)
-    
-  # Board[r1,r2] = !Board[r1,r2]
+   r1 = sample(1:dim(Board)[1],1)
+   r2 = sample(1:dim(Board)[2],1)
+   Board[r1,r2] = !Board[r1,r2]
   }
-  
+} 
   Board
 }
 # board in MinimumList is the best board for the current particle
